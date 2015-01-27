@@ -6,6 +6,6 @@ Infy is released under CC-BY-SA
 
 ## ToDo
 
-- [ ] Add license
+- [X] Add license
 - [ ] Implement ORM-System
 - [ ] Implement SQLite-Support through PDO

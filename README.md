@@ -1,6 +1,8 @@
 # Infy
 
-## The extended easy to use MVC-Framework
+### The extended easy to use MVC-Framework
+
+Infy is released under CC-BY-SA
 
 ## ToDo
 

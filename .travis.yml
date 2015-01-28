@@ -1,0 +1,11 @@
+language: php
+env:
+  global:
+  - secure: jmq+YDa3LN9EOqlbmWzsGcDzipJEzHEx7JSle7KjU+d7qiqX5Fc6uV9CUEs5qjIv4DcL/3JAhqULPnKUDnFGgW1cwilrlMaMHzb4fjfpS7/76K4O2hfhz4hfTq2qKCOKNvRrbIu1/WrBZTjcUbIDYDm/oAD8i8Xe4scPL55dHL4=
+before_install:
+- sudo apt-get update
+- sudo apt-get install -y doxygen ncftp
+script:
+- doxygen doxygen.config
+after_success:
+- ncftpput -R -v -u "frickx" -p $ftppass frickx.bplaced.net /infydocs ./docs

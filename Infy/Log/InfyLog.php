@@ -62,6 +62,7 @@ class InfyLog
     }
 
     /**
+     * Logs a message to info.log
      * @param string $message
      */
     public function info($message)
@@ -71,6 +72,7 @@ class InfyLog
     }
 
     /**
+     * Logs a message to warn.log
      * @param string $message
      */
     public function warn($message)
@@ -80,6 +82,7 @@ class InfyLog
     }
 
     /**
+     * Logs a message to error.log
      * @param string $message
      */
     public function error($message)
@@ -89,6 +92,7 @@ class InfyLog
     }
 
     /**
+     * Logs a message to debug.log
      * @param string $message
      */
     public function debug($message)
@@ -98,6 +102,7 @@ class InfyLog
     }
 
     /**
+     * Logs a message to sql.log
      * @param string $message
      */
     public function sql($message)
@@ -106,6 +111,9 @@ class InfyLog
             fwrite($this->sqlLog, date("d.m.Y H:i:s") . " " . str_replace(str_replace("/", "\\", $_SERVER["DOCUMENT_ROOT"]) . str_replace("/", "\\", str_replace("public/index.php", "", $_SERVER["SCRIPT_NAME"])), "", debug_backtrace()[0]["file"]) . ":". debug_backtrace()[0]["line"] . "> " . $message . PHP_EOL);
     }
 
+    /**
+     * @return void
+     */
     public function __destruct()
     {
         if (is_resource($this->infoLog))

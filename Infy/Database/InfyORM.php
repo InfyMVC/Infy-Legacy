@@ -41,6 +41,11 @@ abstract class InfyORM implements \ArrayAccess
         $this->{$offset} = $value;
     }
 
+    /**
+     * Saves the row in the database
+     * @param bool $forceNewRow
+     * @return void
+     */
     public function save($forceNewRow = false)
     {
 

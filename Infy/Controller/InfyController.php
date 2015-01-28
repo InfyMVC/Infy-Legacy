@@ -1,8 +1,8 @@
 <?php
 namespace Infy\Controller;
 
-
 use Infy\Infy;
+use Infy\View\InfyView;
 
 /**
  * Class InfyController
@@ -18,11 +18,12 @@ class InfyController
 
     /**
      * Holds an instance of InfyView
-     * @var
+     * @var InfyView
      */
     protected $_view;
 
     /**
+     * Holds the submitted extension from the url
      * @var string
      */
     protected $_extension;
@@ -34,6 +35,10 @@ class InfyController
         $this->_view = Infy::View();
     }
 
+    /**
+     * @author FrickX
+     * @return string
+     */
     public function getClientLanguage()
     {
         $languages = array();

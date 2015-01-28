@@ -102,6 +102,9 @@ class InfyMySQL
         return $this->connection;
     }
 
+    /**
+     * @return \PDO
+     */
     public function getConnection()
     {
         return $this->connection;

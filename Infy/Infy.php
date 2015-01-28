@@ -74,6 +74,7 @@ class Infy
     private static $_version = "0.1 alpha";
 
     /**
+     * Sets the routes for the router
      * @param array $routes
      */
     public static function setRoutes($routes)
@@ -87,6 +88,7 @@ class Infy
     }
 
     /**
+     * Return the routes
      * @return array
      */
     public static function getRoutes()
@@ -95,6 +97,7 @@ class Infy
     }
 
     /**
+     * Gets the logger
      * @return \Infy\Log\InfyLog
      */
     public static function Log()
@@ -106,6 +109,7 @@ class Infy
     }
 
     /**
+     * Gets the view
      * @return View\InfyView
      */
     public static function View()
@@ -117,6 +121,7 @@ class Infy
     }
 
     /**
+     * Gets the router
      * @return \Infy\Uri\InfyRouter
      */
     public static function Router()
@@ -128,6 +133,7 @@ class Infy
     }
 
     /**
+     * Gets the settings
      * @return InfySettings
      */
     public static function Settings()
@@ -139,6 +145,7 @@ class Infy
     }
 
     /**
+     * Gets the model
      * @return InfyModel
      */
     public static function Model()
@@ -150,6 +157,7 @@ class Infy
     }
 
     /**
+     * Gets the sessionhandler
      * @return \App\Session\PMSSessionHandler
      * @throws \Exception
      */
@@ -169,6 +177,7 @@ class Infy
     }
 
     /**
+     * Gets the phpmailer
      * @return PHPMailer
      */
     public static function Mail()

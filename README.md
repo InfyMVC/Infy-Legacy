@@ -4,7 +4,7 @@
 
 Infy is released under CC-BY-SA
 
-[![Build Status](https://travis-ci.org/FrickX/Infy.svg?branch=master)](https://travis-ci.org/FrickX/Infy)
+[![Build Status](https://travis-ci.org/InfyMVC/Infy.svg)](https://travis-ci.org/InfyMVC/Infy)
 
 ## ToDo
 

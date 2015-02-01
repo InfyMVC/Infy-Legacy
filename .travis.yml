@@ -8,4 +8,4 @@ before_install:
 script:
 - doxygen doxygen.config
 after_success:
-- ncftpput -R -v -u "frickx" -p $ftppass frickx.bplaced.net /infydocs ./docs
+- ncftpput -R -v -u "ni407250_3" -p $ftppass infymvc.org /docs ./docs

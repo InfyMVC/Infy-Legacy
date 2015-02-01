@@ -1,7 +1,7 @@
 language: php
 env:
   global:
-  - secure: jmq+YDa3LN9EOqlbmWzsGcDzipJEzHEx7JSle7KjU+d7qiqX5Fc6uV9CUEs5qjIv4DcL/3JAhqULPnKUDnFGgW1cwilrlMaMHzb4fjfpS7/76K4O2hfhz4hfTq2qKCOKNvRrbIu1/WrBZTjcUbIDYDm/oAD8i8Xe4scPL55dHL4=
+    secure: OjZPjn5GGgeGpSBPqJ/9IYLLFEla/FraUMf1X8ztYVkciJQPwYTbtVUFX+dFZPsaeGi90f0JCl+ZSv9Q2AO/IjiMm33OC05cs2/4l32H6XkbnQyBnMUmwelQh0Leqx55x2ftul4Y56gK53y8tkAd3d+KJkRIfREsX4LvWlNcarE=
 before_install:
 - sudo apt-get update
 - sudo apt-get install -y doxygen ncftp

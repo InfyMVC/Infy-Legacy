@@ -4,6 +4,7 @@ namespace Infy;
 use Infy\Database\InfyModel;
 use Infy\Helper\PHPMailer;
 use Infy\Log\InfyLog;
+use Infy\Security\InfySecurity;
 use Infy\Session\InfySession;
 use Infy\Settings\InfySettings;
 use Infy\Uri\InfyRouter;
@@ -28,58 +29,73 @@ class Infy
     private static $_log;
 
     /**
+     * Holds an instance of InfyRouter
      * @var Uri\InfyRouter
      */
     private static $_router;
 
     /**
+     * Holds an instance of InfyView
      * @var View\InfyView
      */
     private static $_view;
 
     /**
+     * Holds an instance of InfySettings
      * @var Settings\InfySettings
      */
     private static $_settings;
 
     /**
+     * Holds an instance of InfyModel
      * @var Database\InfyModel
      */
     private static $_model;
 
     /**
+     * Holds an instance of InfySession
      * @var Session\InfySession
      */
     private static $_sessionHandler;
 
     /**
+     * Holds the namespace of the sessionhandler
      * @var string
      */
     private static $_sessionHandlerClass;
 
     /**
+     * Holds an instance of InfySecurity
+     * @var InfySecurity
+     */
+    private static $_security;
+
+    /**
+     * Holds an instance of PHPMailer
      * @var PHPMailer
      */
     private static $_mailer;
 
     /**
+     * Holds an string for the route when a 404 happens
      * @var string
      */
     private static $_404RedirectRoute;
 
     /**
-     * Current Versionstring
+     * Current version
      * @var string
      */
     private static $_version = "0.1 alpha";
 
     /**
      * Sets the routes for the router
+     *
      * @param array $routes
      */
     public static function setRoutes($routes)
     {
-        if($routes == null || count($routes) == 0)
+        if ($routes == null || count($routes) == 0)
             return;
 
         Infy::Router()->addRoutes($routes);
@@ -158,7 +174,6 @@ class Infy
 
     /**
      * Gets the sessionhandler
-     * @return \App\Session\PMSSessionHandler
      * @throws \Exception
      */
     public static function Session()
@@ -174,6 +189,18 @@ class Infy
         }
 
         return self::$_sessionHandler;
+    }
+
+    /**
+     * Gets the security
+     * @return InfySecurity
+     */
+    public static function Security()
+    {
+        if (self::$_security == null)
+            self::$_security = new InfySecurity();
+
+        return self::$_security;
     }
 
     /**
@@ -205,13 +232,12 @@ class Infy
     }
 
 
-
     /**
      * @param string $classname
      */
     public static function __autoload($classname)
     {
-        $filepath = ".." . DIRECTORY_SEPARATOR .str_replace("\\", DIRECTORY_SEPARATOR, $classname) . ".php";
+        $filepath = ".." . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $classname) . ".php";
 
         if (file_exists($filepath))
             require_once $filepath;
@@ -235,6 +261,7 @@ class Infy
         if ($result == false)
         {
             header("Location: " . Infy::Router()->generate(self::$_404RedirectRoute));
+
             return;
         }
         else
@@ -243,7 +270,7 @@ class Infy
                 Infy::Log()->error("There is an eror with the routes...");
             else
             {
-                $controllerName = "App\\Controller\\".$result["target"]["controller"];
+                $controllerName = "App\\Controller\\" . $result["target"]["controller"];
                 $controller = new $controllerName();
                 $controller->{$result["target"]["action"]}();
             }

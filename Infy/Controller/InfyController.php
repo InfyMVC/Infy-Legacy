@@ -39,14 +39,13 @@ class InfyController
      * @author FrickX
      * @return string
      */
-    public function getClientLanguage()
+    public static function getClientLanguage()
     {
         $languages = array();
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
         {
             // break up string into pieces (languages and q factors)
-            preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i',
-                            $_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang_parse);
+            preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang_parse);
             if (count($lang_parse[1]))
             {
                 $languages = array_combine($lang_parse[1], $lang_parse[4]);
@@ -56,13 +55,16 @@ class InfyController
                 arsort($languages, SORT_NUMERIC);
             }
         }
+
         foreach ($languages as $lang => $val)
             break;
-        if (stristr($lang,"-"))
+
+        if (stristr($lang, "-"))
         {
-            $tmp = explode("-",$lang);
+            $tmp = explode("-", $lang);
             $lang = $tmp[0];
         }
+
         return $lang;
     }
 
@@ -70,15 +72,15 @@ class InfyController
      * Returns the actual IP-address of the client
      * @return string IP-address of the client
      */
-    public function clientIP()
+    public static function getClientIP()
     {
-        if(getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown'))
+        if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown'))
             return getenv('HTTP_CLIENT_IP');
-        elseif(getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown'))
+        elseif (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown'))
             return getenv('HTTP_X_FORWARDED_FOR');
-        elseif(getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown'))
+        elseif (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown'))
             return getenv('REMOTE_ADDR');
-        elseif(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown'))
+        elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown'))
             return $_SERVER['REMOTE_ADDR'];
     }
 

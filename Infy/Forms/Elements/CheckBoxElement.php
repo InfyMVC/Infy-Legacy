@@ -16,9 +16,10 @@ class CheckBoxElement extends InfyFormElement
     /**
      * Instatiates a new CheckBoxElement
      *
-     * @param        $name
-     * @param string $value
-     * @param bool   $checked
+     * @param      $name
+     * @param bool $checked
+     *
+     * @internal param string $value
      */
     function __construct($name, $checked = false)
     {

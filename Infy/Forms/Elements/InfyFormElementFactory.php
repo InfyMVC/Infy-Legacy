@@ -26,7 +26,6 @@ class InfyFormElementFactory
      * @param bool   $checked
      *
      * @return CheckBoxElement
-     * @internal param string $value
      */
     public static function getNewCheckBoxElement($name, $checked = false)
     {

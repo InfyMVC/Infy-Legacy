@@ -41,6 +41,8 @@ class WrapElement extends InfyFormElement
         foreach ($this->elements as $key)
             $html .= $key;
 
-        $html = '</' . $this->tag . '>';
+        $html .= '</' . $this->tag . '>';
+        
+        return $html;
     }
 }

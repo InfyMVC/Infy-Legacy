@@ -67,8 +67,7 @@ class InfyLog
      */
     public function info($message)
     {
-        if (is_resource($this->infoLog))
-            fwrite($this->infoLog, date("d.m.Y H:i:s") . " " . str_replace(str_replace("/", "\\", $_SERVER["DOCUMENT_ROOT"]) . str_replace("/", "\\", str_replace("public/index.php", "", $_SERVER["SCRIPT_NAME"])), "", debug_backtrace()[0]["file"]) . ":". debug_backtrace()[0]["line"] . "> " . $message . PHP_EOL);
+        $this->writeToLog($this->infoLog, $message);
     }
 
     /**
@@ -77,8 +76,7 @@ class InfyLog
      */
     public function warn($message)
     {
-        if (is_resource($this->warnLog))
-            fwrite($this->warnLog, date("d.m.Y H:i:s") . " " . str_replace(str_replace("/", "\\", $_SERVER["DOCUMENT_ROOT"]) . str_replace("/", "\\", str_replace("public/index.php", "", $_SERVER["SCRIPT_NAME"])), "", debug_backtrace()[0]["file"]) . ":". debug_backtrace()[0]["line"] . "> " . $message . PHP_EOL);
+        $this->writeToLog($this->warnLog, $message);
     }
 
     /**
@@ -87,8 +85,7 @@ class InfyLog
      */
     public function error($message)
     {
-        if (is_resource($this->errorLog))
-            fwrite($this->errorLog, date("d.m.Y H:i:s") . " " . str_replace(str_replace("/", "\\", $_SERVER["DOCUMENT_ROOT"]) . str_replace("/", "\\", str_replace("public/index.php", "", $_SERVER["SCRIPT_NAME"])), "", debug_backtrace()[0]["file"]) . ":". debug_backtrace()[0]["line"] . "> " . $message . PHP_EOL);
+        $this->writeToLog($this->errorLog, $message);
     }
 
     /**
@@ -97,8 +94,7 @@ class InfyLog
      */
     public function debug($message)
     {
-        if (is_resource($this->debugLog))
-            fwrite($this->debugLog, date("d.m.Y H:i:s") . " " . str_replace(str_replace("/", "\\", $_SERVER["DOCUMENT_ROOT"]) . str_replace("/", "\\", str_replace("public/index.php", "", $_SERVER["SCRIPT_NAME"])), "", debug_backtrace()[0]["file"]) . ":". debug_backtrace()[0]["line"] . "> " . $message . PHP_EOL);
+        $this->writeToLog($this->debugLog, $message);
     }
 
     /**
@@ -107,8 +103,21 @@ class InfyLog
      */
     public function sql($message)
     {
-        if (is_resource($this->sqlLog))
-            fwrite($this->sqlLog, date("d.m.Y H:i:s") . " " . str_replace(str_replace("/", "\\", $_SERVER["DOCUMENT_ROOT"]) . str_replace("/", "\\", str_replace("public/index.php", "", $_SERVER["SCRIPT_NAME"])), "", debug_backtrace()[0]["file"]) . ":". debug_backtrace()[0]["line"] . "> " . $message . PHP_EOL);
+        $this->writeToLog($this->sqlLog, $message);
+    }
+
+    /**
+     * @param Resource $resource
+     * @param String $message
+     */
+    private function writeToLog($resource, $message)
+    {
+        if (!is_resource($resource))
+            return;
+
+        $backtrace = debug_backtrace();
+
+        fwrite($resource, date("d.m.Y H:i:s") . " " . str_replace(str_replace("/", "\\", $_SERVER["DOCUMENT_ROOT"]) . str_replace("/", "\\", str_replace("public/index.php", "", $_SERVER["SCRIPT_NAME"])), "", $backtrace[1]["file"]) . ":". $backtrace[1]["line"] . "> " . $message . PHP_EOL);
     }
 
     /**

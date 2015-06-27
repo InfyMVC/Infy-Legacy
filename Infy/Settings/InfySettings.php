@@ -6,14 +6,19 @@ use Infy\Infy;
 class InfySettings
 {
     /**
-     * @var string
+     * @var string Default charset of the Database
      */
     private $defaultCharset;
 
     /**
-     * @var string
+     * @var string Path to class to the sessionHandler with namespace
      */
     private $sessionHandler;
+
+    /**
+     * @var string Directory where to save the logs
+     */
+    private $logDirectory;
 
     /**
      * @param array $settings
@@ -22,12 +27,14 @@ class InfySettings
     {
         $this->defaultCharset = $settings['database']['defaultCharset'];
         $this->sessionHandler = $settings['session']['sessionHandler'];
+        $this->logDirectory = $settings['log']['directory'];
+
         Infy::set404RedirectRoute($settings['404redirectRoute']);
     }
 
 
     /**
-     * @return string
+     * @return string Default charset of the database
      */
     public function getDefaultCharset()
     {
@@ -35,12 +42,18 @@ class InfySettings
     }
 
     /**
-     * @return string
+     * @return string Path to sessionHandler with namespace
      */
     public function getSessionHandler()
     {
         return $this->sessionHandler;
     }
 
-
+    /**
+     * @return string Directory where to save the logs
+     */
+    public function getLogDirectory()
+    {
+        return $this->logDirectory;
+    }
 }

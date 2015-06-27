@@ -1,5 +1,6 @@
 <?php
 namespace Infy\Log;
+use Infy\Infy;
 
 /**
  * Class InfyLog
@@ -10,7 +11,7 @@ class InfyLog
     /**
      * @var string
      */
-    private $path = "../logs/";
+    private $path;
 
     /**
      * @var resource
@@ -39,6 +40,8 @@ class InfyLog
 
     public function __construct()
     {
+        $this->path = Infy::Settings()->getLogDirectory();
+
         if (!file_exists($this->path."info.log") && is_writable($this->path."info.log"))
             touch($this->path."info.log");
 
@@ -107,8 +110,8 @@ class InfyLog
     }
 
     /**
-     * @param Resource $resource
-     * @param String $message
+     * @param resource $resource
+     * @param string $message
      */
     private function writeToLog($resource, $message)
     {

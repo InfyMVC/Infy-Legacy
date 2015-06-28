@@ -1,11 +1,11 @@
 language: php
 env:
   global:
-    secure: OjZPjn5GGgeGpSBPqJ/9IYLLFEla/FraUMf1X8ztYVkciJQPwYTbtVUFX+dFZPsaeGi90f0JCl+ZSv9Q2AO/IjiMm33OC05cs2/4l32H6XkbnQyBnMUmwelQh0Leqx55x2ftul4Y56gK53y8tkAd3d+KJkRIfREsX4LvWlNcarE=
+    secure: ZTlqiRvvpcgsLu/Q7n1Oq9MZPPnUiQc01IIay7QVE51uWYS6Nh4syMeLJo82ZUbA9f9BNwI3IbsEfwOw+JruggOfLRdzKK8P14T8VE+xyg7VnEbWkuYxlP3fjWft8itnhLZmK+78XRfTwlEp2rVui5BcjoBg3J1+vexhxu/NJnY=
 before_install:
 - sudo apt-get update
 - sudo apt-get install -y doxygen ncftp
 script:
 - doxygen doxygen.config
 after_success:
-- ncftpput -R -v -u "ni407250_3" -p $ftppass infymvc.org /docs ./docs
+- ncftpput -R -v -u "ni109113_2ftp1" -p $ftppass ni109113_2.vweb17.nitrado.net /docs ./docs

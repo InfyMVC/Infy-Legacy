@@ -21,15 +21,28 @@ class InfySettings
     private $logDirectory;
 
     /**
+     * @var boolean Should Infy merge the route params with the post params
+     */
+    private $shouldMergeWithPost;
+
+    /**
      * @param array $settings
      */
     public function init($settings)
     {
-        $this->defaultCharset = $settings['database']['defaultCharset'];
-        $this->sessionHandler = $settings['session']['sessionHandler'];
-        $this->logDirectory = $settings['log']['directory'];
+        if (isset($settings['database']['defaultCharset']))
+            $this->defaultCharset = $settings['database']['defaultCharset'];
 
-        Infy::set404RedirectRoute($settings['404redirectRoute']);
+        if (isset($settings['session']['sessionHandler']))
+            $this->sessionHandler = $settings['session']['sessionHandler'];
+
+        if(isset($settings['log']['directory']))
+            $this->logDirectory = $settings['log']['directory'];
+
+        if(isset($settings['route']['mergeParamsWithPost']))
+            $this->shouldMergeWithPost = $settings['route']['mergeParamsWithPost'];
+
+        Infy::set404RedirectRoute($settings['route']['404redirectRoute']);
     }
 
 
@@ -47,6 +60,14 @@ class InfySettings
     public function getSessionHandler()
     {
         return $this->sessionHandler;
+    }
+
+    /**
+     * @return boolean Merge route parameters with $_REQUEST
+     */
+    public function shouldMergeWithPost()
+    {
+        return $this->shouldMergeWithPost;
     }
 
     /**

@@ -30,7 +30,11 @@ class InfyController
 
     public function __construct()
     {
-        $this->_params = Infy::Router()->getParams();
+        if (Infy::Settings()->shouldMergeWithPost())
+            $this->_params = array_merge(Infy::Router()->getParams(), $_POST);
+        else
+            $this->_params = Infy::Router()->getParams();
+
         $this->_extension = Infy::Router()->getExtension();
         $this->_view = Infy::View();
     }

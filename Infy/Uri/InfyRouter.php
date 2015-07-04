@@ -2,6 +2,7 @@
 namespace Infy\Uri;
 
 use Infy\Infy;
+use Traversable;
 
 /**
  * Class InfyRouter

@@ -12,7 +12,7 @@ $settings['database']['defaultCharset'] = 'UTF8';
 $settings['session']['sessionHandler'] = 'Infy\\Session\\InfySessionHandler';
 
 /**
- * Should Infy merge the params of the route with the default $_POST parameters
+ * Should Infy merge the params of the route with the $_POST parameters
  */
 $settings['route']['mergeParamsWithPost'] = false;
 

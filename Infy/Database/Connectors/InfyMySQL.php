@@ -92,6 +92,7 @@ class InfyMySQL
         }
         catch (\PDOException $ex)
         {
+            Infy::Log()->error("Can't connect to MySQL-Database at " . $this->hostname . ":" . $this->port . " with username " . $this->username);
             return false;
         }
 

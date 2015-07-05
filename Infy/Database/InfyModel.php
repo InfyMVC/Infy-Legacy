@@ -28,7 +28,7 @@ class InfyModel
     private $_UseSlave      = false;
 
     /**
-     * @var \PDO
+     * @var InfyMySQL
      */
     private $_Connection    = null;
 
@@ -115,7 +115,7 @@ class InfyModel
     }
 
     /**
-     * @return \PDO
+     * @return InfyMySQL
      */
     public function getConnection()
     {

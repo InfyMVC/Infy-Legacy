@@ -63,7 +63,7 @@ class InfySettings
     }
 
     /**
-     * @return boolean Merge route parameters with $_REQUEST
+     * @return bool Merge route parameters with $_REQUEST
      */
     public function shouldMergeWithPost()
     {

@@ -25,6 +25,8 @@ class InfySettings
      */
     private $shouldMergeWithPost;
 
+    private $appendDefaultNamespaceToControllers;
+
     /**
      * @param array $settings
      */
@@ -39,7 +41,10 @@ class InfySettings
         if(isset($settings['log']['directory']))
             $this->logDirectory = $settings['log']['directory'];
 
-        if(isset($settings['route']['mergeParamsWithPost']))
+        if (isset($settings['route']['appendDefaultNamespaceToControllers']))
+            $this->appendDefaultNamespaceToControllers = $settings['route']['appendDefaultNamespaceToControllers'];
+
+        if (isset($settings['route']['mergeParamsWithPost']))
             $this->shouldMergeWithPost = $settings['route']['mergeParamsWithPost'];
 
         Infy::set404RedirectRoute($settings['route']['404redirectRoute']);
@@ -60,6 +65,14 @@ class InfySettings
     public function getSessionHandler()
     {
         return $this->sessionHandler;
+    }
+
+    /**
+     * @return bool Should Infy append by default the default namespace to the controllers in routes.php
+     */
+    public function getAppendDefaultNamespaceToControllers()
+    {
+        return $this->appendDefaultNamespaceToControllers;
     }
 
     /**

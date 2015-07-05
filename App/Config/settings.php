@@ -12,6 +12,11 @@ $settings['database']['defaultCharset'] = 'UTF8';
 $settings['session']['sessionHandler'] = 'Infy\\Session\\InfySessionHandler';
 
 /**
+ * Should Infy append by default the namespace to the Controllers in the routes.php
+ */
+$settings['route']['appendDefaultNamespaceToControllers'] = true;
+
+/**
  * Should Infy merge the params of the route with the $_POST parameters
  */
 $settings['route']['mergeParamsWithPost'] = false;

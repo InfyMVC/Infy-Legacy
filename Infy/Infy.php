@@ -86,7 +86,7 @@ class Infy
      * Current version
      * @var string
      */
-    private static $_version = "0.1 alpha";
+    private static $_version = "0.0.2";
 
     /**
      * Sets the routes for the router
@@ -96,7 +96,9 @@ class Infy
     public static function setRoutes($routes)
     {
         if ($routes == null || count($routes) == 0)
+        {
             return;
+        }
 
         Infy::Router()->addRoutes($routes);
 
@@ -181,10 +183,11 @@ class Infy
         if (self::$_sessionHandler == null)
         {
             self::$_sessionHandler = new self::$_sessionHandlerClass;
+
             if (!(self::$_sessionHandler instanceof InfySession))
             {
-                Infy::Log()->error("Der SessionHandler ist keine Instanz von InfySession");
-                throw new \Exception("Der SessionHandler ist keine Instanz von InfySession");
+                Infy::Log()->error("The specified sessionhandler isn't an instance of InfySession");
+                throw new \Exception("The specified sessionhandler isn't an instance of InfySession");
             }
         }
 
@@ -237,12 +240,37 @@ class Infy
      */
     public static function __autoload($classname)
     {
-        $filepath = ".." . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $classname) . ".php";
+        // check for composer
+        if (file_exists("../vendor/composer/autoload_namespaces.php"))
+        {
+            // composer is installed and has installed some packages
+            $composerNamespaces = require "../vendor/composer/autoload_namespaces.php";
+
+            if (!array_key_exists($classname, $composerNamespaces))
+            {
+                // Class is Infy or app related
+                $filepath = ".." . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $classname) . ".php";
+            }
+            else
+            {
+                // Class is managed via composer
+                $tempPath = $composerNamespaces[$classname][0];
+                $filepath = str_replace("\\", DIRECTORY_SEPARATOR, str_replace("/", DIRECTORY_SEPARATOR, $tempPath) . DIRECTORY_SEPARATOR . $classname) . ".php";
+            }
+        }
+        else
+        {
+            $filepath = ".." . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $classname) . ".php";
+        }
 
         if (file_exists($filepath))
+        {
             require_once $filepath;
+        }
         else
-            Infy::Log()->error("Can't find file to class " . $classname);
+        {
+            Infy::Log()->error("Can't find file to class '" . $classname . "''");
+        }
     }
 
     /**
@@ -267,12 +295,46 @@ class Infy
         else
         {
             if (!is_array($result["target"]))
-                Infy::Log()->error("There is an eror with the routes...");
+            {
+                Infy::Log()->error("The route with the name '" . $result["name"] . "' must have an array with the indexes 'controller' and 'action' before we can call all things");
+            }
             else
             {
-                $controllerName = "App\\Controller\\" . $result["target"]["controller"];
-                $controller = new $controllerName();
-                $controller->{$result["target"]["action"]}();
+                try
+                {
+                    $controllerName = (Infy::Settings()->getAppendDefaultNamespaceToControllers() ? "App\\Controller\\" . $result["target"]["controller"] : $result["target"]["controller"] );
+                    $methodName = $result["target"]["action"];
+
+                    $reflectedController = new \ReflectionClass($controllerName);
+
+                    if (!$reflectedController->hasMethod($methodName))
+                    {
+                        Infy::Log()->error("Class '" . $controllerName . "' doesn't have the method '" . $methodName . "''");
+                        return;
+                    }
+
+                    $reflectedMethod = $reflectedController->getMethod($methodName);
+
+                    if ($reflectedMethod->isPrivate() || $reflectedMethod->isProtected())
+                    {
+                        Infy::Log()->error("Method '" . $methodName . "' in class '" . $controllerName . "' is private or protected. Please change the visibility to public.");
+                        return;
+                    }
+
+                    if ($reflectedMethod->isStatic())
+                    {
+                        $controllerName::{$methodName}();
+                    }
+                    else
+                    {
+                        $controller = new $controllerName();
+                        $controller->{$methodName}();
+                    }
+                }
+                catch (\ReflectionException $exception)
+                {
+                    Infy::Log()->error("Infy had some problems while reflecting a class. Please report back to the developer team.");
+                }
             }
         }
     }

@@ -269,7 +269,7 @@ class Infy
         }
         else
         {
-            Infy::Log()->error("Can't find file to class '" . $classname . "''");
+            Infy::Log()->error("Can't find file to class '" . $classname . "'");
         }
     }
 
@@ -309,7 +309,7 @@ class Infy
 
                     if (!$reflectedController->hasMethod($methodName))
                     {
-                        Infy::Log()->error("Class '" . $controllerName . "' doesn't have the method '" . $methodName . "''");
+                        Infy::Log()->error("Class '" . $controllerName . "' doesn't have the method '" . $methodName . "'");
                         return;
                     }
 
@@ -333,7 +333,7 @@ class Infy
                 }
                 catch (\ReflectionException $exception)
                 {
-                    Infy::Log()->error("Infy had some problems while reflecting a class. Please report back to the developer team.");
+                    Infy::Log()->error("Infy had some problems while reflecting a class. Please report back to the developer team. Class " . $controllerName);
                 }
             }
         }

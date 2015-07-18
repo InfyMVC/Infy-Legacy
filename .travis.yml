@@ -10,4 +10,4 @@ before_install:
 script:
 - doxygen doxygen.config
 after_success:
-- ncftpput -R -v -u "$ftpuser" -p $ftppass $ftpip /docs ./docs
+- ncftpput -R -v -u "$ftpuser" -p $ftppass $ftpip /docs ./docs/html/

@@ -1,11 +1,13 @@
 language: php
 env:
   global:
-    secure: ZTlqiRvvpcgsLu/Q7n1Oq9MZPPnUiQc01IIay7QVE51uWYS6Nh4syMeLJo82ZUbA9f9BNwI3IbsEfwOw+JruggOfLRdzKK8P14T8VE+xyg7VnEbWkuYxlP3fjWft8itnhLZmK+78XRfTwlEp2rVui5BcjoBg3J1+vexhxu/NJnY=
+  - secure: GWDViPOTZx3LdYghw9S/4+VFTiRObHluEc6cmMmPnwueJ3eVYvZVu4rOBj0ydFJ/k/8AVTcJpVeNGytI2+10LDh3ya2KOmjIpa0/zRGUmhgpy3P5UJH4jK4Se/lbz4u4yLL6aFvwpxllrUtwhHZT9cnY2tc/dm+Lzs+agvHkuBU=
+  - secure: bJWxzzfn0qEjiowTQPna3mIA3phDZRzTCL86wSzZQP96YRjLpKf3wOUn9ocWtMPKp0bcopToZx7Zu2nBbljKvCY7I24mQ6wazjDyW96ON30aOSomfsj35gFZGf1HMAe8uigP/ru+TVcZ3QE8psAyu6Q2QiGt/pN0ZfmumPgCEro=
+  - secure: YuI/PjK/pHz+G2A/tKP1aNpaiK0zWaF97X6pRKaLXmaQyRZS5MmTs9741mWyxxSkY2iYYHWgm8akhchGSvaZhql5h5iVB6PnwSoqx+ulokYf5QuERO8YyDHyKz79UrGzxERVmO7T/VBCBrlIKmRHD3qzbz+nOmevdN9AfROInvI=
 before_install:
 - sudo apt-get update
 - sudo apt-get install -y doxygen ncftp
 script:
 - doxygen doxygen.config
 after_success:
-- ncftpput -R -v -u "ni109113_2ftp1" -p $ftppass ni109113_2.vweb17.nitrado.net /docs ./docs
+- ncftpput -R -v -u "$ftpuser" -p $ftppass $ftpip /docs ./docs

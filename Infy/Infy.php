@@ -86,7 +86,7 @@ class Infy
      * Current version
      * @var string
      */
-    private static $_version = "0.0.2";
+    private static $_version = "0.0.3";
 
     /**
      * Sets the routes for the router
@@ -278,7 +278,11 @@ class Infy
      */
     public static function run()
     {
-        Infy::Router()->setBasePath(str_replace($_SERVER["QUERY_STRING"], "", $_SERVER["REQUEST_URI"]));
+        $htAccessFile = file_get_contents("../public/.htaccess");
+        preg_match("/RewriteBase (?<basepath>.*)/", $htAccessFile, $matches);
+
+        Infy::Router()->setBasePath(str_replace(array("\n","\r"), "", $matches["basepath"]));
+
 
         self::$_sessionHandlerClass = self::Settings()->getSessionHandler();
 

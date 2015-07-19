@@ -126,7 +126,7 @@ class InfyRouter
             if(isset($this->namedRoutes[$name]))
                 Infy::Log()->error("Can not redeclare route '{$name}'");
             else
-                $this->namedRoutes[$name] = $route;
+                $this->namedRoutes[$name] = array('route' => $route, 'external' => (isset($target['external']) ? $target['external'] : false));
 
         return;
     }
@@ -145,12 +145,12 @@ class InfyRouter
         // Check if named route exists
         if(!isset($this->namedRoutes[$routeName]))
         {
-            Infy::Log()->error("Route '{$routeName}' does not exist.");
+            Infy::Log()->error("Route '" . $routeName . "' does not exist.");
             return;
         }
 
         // Replace named parameters
-        $route = $this->namedRoutes[$routeName];
+        $route = $this->namedRoutes[$routeName]['route'];
 
         if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
 
@@ -170,7 +170,7 @@ class InfyRouter
 
         }
 
-        return $this->basePath . $route;
+        return ($this->namedRoutes[$routeName]['external'] == true ? $route : $this->basePath . $route);
     }
 
     /**
@@ -187,9 +187,9 @@ class InfyRouter
         if($requestUrl === null)
             $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
 
+
         // strip base path from request url
         $requestUrl = substr($requestUrl, strlen($this->basePath));
-
 
         // Strip query string (?a=b) from Request Url
         if (($strpos = strpos($requestUrl, '?')) !== false)

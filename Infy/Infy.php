@@ -244,7 +244,7 @@ class Infy
         if (file_exists("../vendor/composer/autoload_namespaces.php"))
         {
             // composer is installed and has installed some packages
-            $composerNamespaces = require "../vendor/composer/autoload_namespaces.php";
+            $composerNamespaces = require "../vendor/composer/autoload_classmap.php";
 
             if (!array_key_exists($classname, $composerNamespaces))
             {
@@ -254,8 +254,7 @@ class Infy
             else
             {
                 // Class is managed via composer
-                $tempPath = $composerNamespaces[$classname][0];
-                $filepath = str_replace("\\", DIRECTORY_SEPARATOR, str_replace("/", DIRECTORY_SEPARATOR, $tempPath) . DIRECTORY_SEPARATOR . $classname) . ".php";
+                $filepath = $composerNamespaces[$classname];
             }
         }
         else

@@ -25,14 +25,16 @@ class InfyView
      */
     public function registerType($type, $output)
     {
-        if ($type == "")
+        if ($type === (string) "")
         {
             Infy::Log()->error("No type was given to register");
             return;
         }
 
-        if ($output == "")
+        if ($output === (string) "")
+        {
             Infy::Log()->warn("There is no output for type: " . $type);
+        }
 
         $this->_registeredTypes[$type] = $output;
     }
@@ -45,10 +47,14 @@ class InfyView
     public function getOutputforType($type, $file)
     {
         if ($type == "")
+        {
             return;
+        }
 
-        if ($file == "")
-            return;
+        if ($file === "")
+        {
+            return;            
+        }
 
         return str_replace("%file%", $file, $this->_registeredTypes[$type]);
     }
@@ -60,21 +66,34 @@ class InfyView
      */
     public function getMedia($media)
     {
+        if (!array_key_exists($media, $this->_registeredAssets))
+        {
+            return;
+        }
+            
         foreach ($this->_registeredAssets[$media] as $file)
         {
             switch ($media)
             {
                 case 'css':
                     if ($file['isURL'])
+                    {
                         echo '<link rel="stylesheet" href="' . $file['file'] . '">';
+                    }
                     else
+                    {
                         echo '<link rel="stylesheet" href="' . Infy::Router()->getBasePath() . $file['file'] . '">';
+                    }
                     break;
                 case 'js':
                     if ($file['isURL'])
+                    {
                         echo '<script type="text/javascript" src="' . $file['file'] . '"></script>';
+                    }
                     else
+                    {
                         echo '<script type="text/javascript" src="' . Infy::Router()->getBasePath() . $file['file'] . '"></script>';
+                    }
                     break;
             }
         }
@@ -110,7 +129,9 @@ class InfyView
     public function registerAsset($type, $filename, $isURL = false)
     {
         if (!isset($this->_registeredAssets[$type]))
-            $this->_registeredAssets[$type] = array();
+        {
+            $this->_registeredAssets[$type] = arra();
+        }
 
         $this->_registeredAssets[$type][] = array('file' => $filename, 'isURL' => $isURL);
     }

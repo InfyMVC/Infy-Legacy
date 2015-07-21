@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms\Elements;
 
 /**
@@ -7,6 +8,7 @@ namespace Infy\Forms\Elements;
  */
 class RadioElement extends InfyFormElement
 {
+
     /**
      * Holds if the checkbox is checked
      * @var bool
@@ -54,10 +56,14 @@ class RadioElement extends InfyFormElement
         $html = '<input type="' . $this->type . '" name="' . $this->name . '"';
 
         if ($this->value != "")
+        {
             $html .= ' value="' . $this->value . '"';
+        }
 
         if ($this->id != "")
+        {
             $html .= ' id="' . $this->id . '"';
+        }
 
         $html .= $this->getClassesString();
 

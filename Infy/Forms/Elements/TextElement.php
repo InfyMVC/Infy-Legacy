@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms\Elements;
 
 /**
@@ -7,6 +8,7 @@ namespace Infy\Forms\Elements;
  */
 class TextElement extends InfyFormElement
 {
+
     /**
      * Holds the tag for the element
      * @var string
@@ -86,7 +88,9 @@ class TextElement extends InfyFormElement
         $html = '<' . $this->tag;
 
         if ($this->id != "")
+        {
             $html .= ' id=".' . $this->id . '"';
+        }
 
         $html .= $this->getClassesString();
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Uri;
 
 use Infy\Infy;
@@ -10,16 +11,17 @@ use Traversable;
  */
 class InfyRouter
 {
+
     protected $routes = array();
     protected $namedRoutes = array();
     protected $basePath = '';
     protected $matchTypes = array(
-        'i'  => '[0-9]++',
-        'a'  => '[0-9A-Za-z]++',
-        'h'  => '[0-9A-Fa-f]++',
-        '*'  => '.+?',
+        'i' => '[0-9]++',
+        'a' => '[0-9A-Za-z]++',
+        'h' => '[0-9A-Fa-f]++',
+        '*' => '.+?',
         '**' => '.++',
-        ''   => '[^/\.]++'
+        '' => '[^/\.]++'
     );
 
     /**
@@ -84,11 +86,15 @@ class InfyRouter
      */
     public function addRoutes($routes)
     {
-        if(!is_array($routes) && !$routes instanceof Traversable)
+        if (!is_array($routes) && !$routes instanceof Traversable)
+        {
             Infy::Log()->error('Routes should be an array or an instance of Traversable');
+        }
 
-        foreach($routes as $route)
+        foreach ($routes as $route)
+        {
             call_user_func_array(array($this, 'map'), $route);
+        }
     }
 
     /**
@@ -122,11 +128,17 @@ class InfyRouter
     {
         $this->routes[] = array($method, $route, $target, $name);
 
-        if($name)
-            if(isset($this->namedRoutes[$name]))
+        if ($name)
+        {
+            if (isset($this->namedRoutes[$name]))
+            {
                 Infy::Log()->error("Can not redeclare route '{$name}'");
+            }
             else
+            {
                 $this->namedRoutes[$name] = array('route' => $route, 'external' => (isset($target['external']) ? $target['external'] : false));
+            }
+        }
 
         return;
     }
@@ -143,7 +155,7 @@ class InfyRouter
     public function generate($routeName, array $params = array())
     {
         // Check if named route exists
-        if(!isset($this->namedRoutes[$routeName]))
+        if (!isset($this->namedRoutes[$routeName]))
         {
             Infy::Log()->error("Route '" . $routeName . "' does not exist.");
             return;
@@ -152,22 +164,27 @@ class InfyRouter
         // Replace named parameters
         $route = $this->namedRoutes[$routeName]['route'];
 
-        if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
+        if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER))
+        {
 
-            foreach($matches as $match)
+            foreach ($matches as $match)
             {
                 list($block, $pre, $type, $param, $optional) = $match;
 
                 if ($pre)
+                {
                     $block = substr($block, 1);
+                }
 
-                if(isset($params[$param]))
+                if (isset($params[$param]))
+                {
                     $route = str_replace($block, $params[$param], $route);
+                }
                 elseif ($optional)
+                {
                     $route = str_replace($pre . $block, '', $route);
+                }
             }
-
-
         }
 
         return ($this->namedRoutes[$routeName]['external'] == true ? $route : $this->basePath . $route);
@@ -184,8 +201,10 @@ class InfyRouter
         $params = array();
 
         // set Request Url if it isn't passed as parameter
-        if($requestUrl === null)
+        if ($requestUrl === null)
+        {
             $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+        }
 
 
         // strip base path from request url
@@ -193,17 +212,21 @@ class InfyRouter
 
         // Strip query string (?a=b) from Request Url
         if (($strpos = strpos($requestUrl, '?')) !== false)
+        {
             $requestUrl = substr($requestUrl, 0, $strpos);
+        }
 
         // set Request Method if it isn't passed as a parameter
-        if($requestMethod === null)
+        if ($requestMethod === null)
+        {
             $requestMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+        }
 
         // Force request_order to be GP
         // http://www.mail-archive.com/internals@lists.php.net/msg33119.html
         $_REQUEST = array_merge($_GET, $_POST);
 
-        foreach($this->routes as $handler)
+        foreach ($this->routes as $handler)
         {
             list($method, $_route, $target, $name) = $handler;
 
@@ -211,20 +234,26 @@ class InfyRouter
             $method_match = false;
 
             // Check if request method matches. If not, abandon early. (CHEAP)
-            foreach($methods as $method)
+            foreach ($methods as $method)
+            {
                 if (strcasecmp($requestMethod, $method) === 0)
                 {
                     $method_match = true;
                     break;
                 }
+            }
 
             // Method did not match, continue to next route.
-            if(!$method_match)
+            if (!$method_match)
+            {
                 continue;
+            }
 
             // Check for a wildcard (matches all)
             if ($_route === '*')
+            {
                 $match = true;
+            }
             elseif (isset($_route[0]) && $_route[0] === '@')
             {
                 $pattern = '`' . substr($_route, 1) . '`u';
@@ -249,7 +278,7 @@ class InfyRouter
                     {
                         $c = $n;
                         $regex = $c === '[' || $c === '(' || $c === '.';
-                        if (false === $regex && false !== isset($_route[$i+1]))
+                        if (false === $regex && false !== isset($_route[$i + 1]))
                         {
                             $n = $_route[$i + 1];
                             $regex = $n === '?' || $n === '+' || $n === '*' || $n === '{';
@@ -267,19 +296,18 @@ class InfyRouter
                 $match = preg_match($regex, $requestUrl, $params);
             }
 
-            if(($match == true || $match > 0))
+            if (($match == true || $match > 0))
             {
-                if($params)
+                if ($params)
                 {
-                    foreach($params as $key => $value)
-                        if(is_numeric($key))
+                    foreach ($params as $key => $value)
+                        if (is_numeric($key))
                             unset($params[$key]);
                     $this->_params = $params;
                 }
 
                 if (isset($params["format"]) && $params["format"] != "")
                 {
-
                     unset($params["format"]);
                 }
 
@@ -302,38 +330,42 @@ class InfyRouter
         if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER))
         {
             $matchTypes = $this->matchTypes;
-            foreach($matches as $match) {
+            foreach ($matches as $match)
+            {
                 list($block, $pre, $type, $param, $optional) = $match;
 
                 if (isset($matchTypes[$type]))
+                {
                     $type = $matchTypes[$type];
+                }
 
                 if ($pre === '.')
+                {
                     $pre = '\.';
+                }
 
                 //Older versions of PCRE require the 'P' in (?P<named>)
                 $pattern = '(?:'
-                    . ($pre !== '' ? $pre : null)
-                    . '('
-                    . ($param !== '' ? "?P<$param>" : null)
-                    . $type
-                    . '))'
-                    . ($optional !== '' ? '?' : null);
+                        . ($pre !== '' ? $pre : null)
+                        . '('
+                        . ($param !== '' ? "?P<$param>" : null)
+                        . $type
+                        . '))'
+                        . ($optional !== '' ? '?' : null);
 
                 $route = str_replace($block, $pattern, $route);
             }
-
         }
         return "`^$route$`u";
     }
 
     public function redirect($route)
     {
-        foreach(Infy::getRoutes() as $key => $value)
+        foreach (Infy::getRoutes() as $key => $value)
         {
             if ($value[1] == $route)
             {
-                $controllername = "App\\Controller\\".$value[2]['controller'];
+                $controllername = "App\\Controller\\" . $value[2]['controller'];
                 $controller = new $controllername();
                 $controller->{$value[2]["action"]}();
                 break;

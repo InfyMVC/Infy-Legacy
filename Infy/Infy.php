@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy;
 
 use Infy\Database\InfyModel;
@@ -16,6 +17,7 @@ use Infy\View;
  */
 class Infy
 {
+
     /**
      * Holds all the routes
      * @var array
@@ -121,7 +123,9 @@ class Infy
     public static function Log()
     {
         if (self::$_log == null)
+        {
             self::$_log = new InfyLog();
+        }
 
         return self::$_log;
     }
@@ -133,7 +137,9 @@ class Infy
     public static function View()
     {
         if (self::$_view == null)
+        {
             self::$_view = new View\InfyView();
+        }
 
         return self::$_view;
     }
@@ -145,7 +151,9 @@ class Infy
     public static function Router()
     {
         if (self::$_router == null)
+        {
             self::$_router = new InfyRouter();
+        }
 
         return self::$_router;
     }
@@ -157,7 +165,9 @@ class Infy
     public static function Settings()
     {
         if (self::$_settings == null)
+        {
             self::$_settings = new InfySettings();
+        }
 
         return self::$_settings;
     }
@@ -169,7 +179,9 @@ class Infy
     public static function Model()
     {
         if (self::$_model == null)
+        {
             self::$_model = new InfyModel();
+        }
 
         return self::$_model;
     }
@@ -201,7 +213,9 @@ class Infy
     public static function Security()
     {
         if (self::$_security == null)
+        {
             self::$_security = new InfySecurity();
+        }
 
         return self::$_security;
     }
@@ -213,7 +227,9 @@ class Infy
     public static function Mail()
     {
         if (self::$_mailer == null)
+        {
             self::$_mailer = new PHPMailer();
+        }
 
         return self::$_mailer;
     }
@@ -233,7 +249,6 @@ class Infy
     {
         self::$_404RedirectRoute = $route;
     }
-
 
     /**
      * @param string $classname
@@ -280,7 +295,7 @@ class Infy
         $htAccessFile = file_get_contents("../public/.htaccess");
         preg_match("/RewriteBase (?<basepath>.*)/", $htAccessFile, $matches);
 
-        Infy::Router()->setBasePath(str_replace(array("\n","\r"), "", $matches["basepath"]));
+        Infy::Router()->setBasePath(str_replace(array("\n", "\r"), "", $matches["basepath"]));
 
 
         self::$_sessionHandlerClass = self::Settings()->getSessionHandler();

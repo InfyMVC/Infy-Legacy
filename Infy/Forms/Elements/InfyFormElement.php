@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms\Elements;
 
 /**
@@ -7,6 +8,7 @@ namespace Infy\Forms\Elements;
  */
 abstract class InfyFormElement
 {
+
     /**
      * Initializes a FormElement
      *
@@ -245,7 +247,9 @@ abstract class InfyFormElement
     public function removeDataAttribute($name)
     {
         if (array_key_exists($name, $this->dataAttributes))
+        {
             unset($this->dataAttributes[$name]);
+        }
 
         return $this;
     }
@@ -300,8 +304,12 @@ abstract class InfyFormElement
         $html = "";
 
         if (count($this->dataAttributes) != 0)
+        {
             foreach ($this->dataAttributes as $key => $value)
+            {
                 $html .= ' data-' . $key . '="' . $value . '"';
+            }
+        }
 
         return $html;
     }

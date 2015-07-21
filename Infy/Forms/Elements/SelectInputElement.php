@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms\Elements;
 
 /**
@@ -7,6 +8,7 @@ namespace Infy\Forms\Elements;
  */
 class SelectInputElement extends InfyFormElement
 {
+
     /**
      * Holds all options from the select element
      * @var array
@@ -69,7 +71,9 @@ class SelectInputElement extends InfyFormElement
     public function removeOption($option)
     {
         if (array_key_exists($option, $this->options))
+        {
             unset($this->options[$option]);
+        }
 
         return $this;
     }
@@ -141,7 +145,9 @@ class SelectInputElement extends InfyFormElement
         $html .= ' name="' . $this->name . '"';
 
         if ($this->id != "")
+        {
             $html .= ' id="' . $this->id . '"';
+        }
 
         $html .= $this->getClassesString();
 
@@ -156,7 +162,9 @@ class SelectInputElement extends InfyFormElement
         $html .= '>';
 
         foreach ($this->options as $key)
+        {
             $html .= $key;
+        }
 
         $html .= '</select>';
 

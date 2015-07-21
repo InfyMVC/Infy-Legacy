@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\View;
 
 use Infy\Infy;
@@ -9,6 +10,7 @@ use Infy\Infy;
  */
 class InfyView
 {
+
     /**
      * @var array
      */
@@ -46,14 +48,14 @@ class InfyView
      */
     public function getOutputforType($type, $file)
     {
-        if ($type == "")
+        if ($type === (string) "")
         {
             return;
         }
 
-        if ($file === "")
+        if ($file === (string) "")
         {
-            return;            
+            return;
         }
 
         return str_replace("%file%", $file, $this->_registeredTypes[$type]);
@@ -70,7 +72,7 @@ class InfyView
         {
             return;
         }
-            
+
         foreach ($this->_registeredAssets[$media] as $file)
         {
             switch ($media)
@@ -109,9 +111,9 @@ class InfyView
     {
         extract($data, EXTR_OVERWRITE);
 
-        if (file_exists("../App/Views/". $view . ".php"))
+        if (file_exists("../App/Views/" . $view . ".php"))
         {
-            require_once("../App/Views/". $view . ".php");
+            require_once("../App/Views/" . $view . ".php");
         }
         else
         {

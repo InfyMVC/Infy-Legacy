@@ -1,10 +1,18 @@
 <?php
+
 namespace Infy\Settings;
 
 use Infy\Infy;
 
 class InfySettings
 {
+
+    /**
+     *
+     * @var boolean Set if Infy should connect to the database
+     */
+    private $useDatabase;
+
     /**
      * @var string Default charset of the Database
      */
@@ -25,6 +33,10 @@ class InfySettings
      */
     private $shouldMergeWithPost;
 
+    /**
+     *
+     * @var boolean Should Infy append by default the default namespace 'App\Controller'
+     */
     private $appendDefaultNamespaceToControllers;
 
     /**
@@ -32,24 +44,50 @@ class InfySettings
      */
     public function init($settings)
     {
+        if (isset($settings['database']['useDatabase']))
+        {
+            $this->useDatabase = $settings['database']['useDatabase'];
+        }
+
         if (isset($settings['database']['defaultCharset']))
+        {
             $this->defaultCharset = $settings['database']['defaultCharset'];
+        }
 
         if (isset($settings['session']['sessionHandler']))
+        {
             $this->sessionHandler = $settings['session']['sessionHandler'];
+        }
 
-        if(isset($settings['log']['directory']))
+        if (isset($settings['log']['directory']))
+        {
             $this->logDirectory = $settings['log']['directory'];
+        }
 
         if (isset($settings['route']['appendDefaultNamespaceToControllers']))
+        {
             $this->appendDefaultNamespaceToControllers = $settings['route']['appendDefaultNamespaceToControllers'];
+        }
 
         if (isset($settings['route']['mergeParamsWithPost']))
+        {
             $this->shouldMergeWithPost = $settings['route']['mergeParamsWithPost'];
+        }
 
-        Infy::set404RedirectRoute($settings['route']['404redirectRoute']);
+        if (isset($settings['route']['404redirectRoute']))
+        {
+            Infy::set404RedirectRoute($settings['route']['404redirectRoute']);
+        }
     }
 
+    /**
+     *
+     * @return boolean Set if Infy should connect to the database
+     */
+    public function getUseDatabase()
+    {
+        return $this->useDatabase;
+    }
 
     /**
      * @return string Default charset of the database

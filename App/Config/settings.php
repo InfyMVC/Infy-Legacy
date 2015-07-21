@@ -1,5 +1,11 @@
 <?php
+
 $settings = array();
+
+/**
+ * Set if Infy should connect to the database
+ */
+$settings['database']['useDatabase'] = false;
 
 /**
  * Set the default charset for the database

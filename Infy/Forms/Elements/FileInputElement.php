@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms\Elements;
 
 /**
@@ -7,6 +8,7 @@ namespace Infy\Forms\Elements;
  */
 class FileInputElement extends InfyFormElement
 {
+
     /**
      * Instantiates a new FileInputElement
      *
@@ -23,7 +25,9 @@ class FileInputElement extends InfyFormElement
         $html = '<input type="' . $this->type . '" name="' . $this->name . '"';
 
         if ($this->id != "")
+        {
             $html .= ' id="' . $this->id . '"';
+        }
 
         $html .= $this->getClassesString();
 

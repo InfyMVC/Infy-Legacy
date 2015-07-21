@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms\Elements;
 
 /**
@@ -7,6 +8,7 @@ namespace Infy\Forms\Elements;
  */
 class PasswordInputElement extends InfyFormElement
 {
+
     /**
      * @param string $name
      * @param string $value
@@ -23,10 +25,14 @@ class PasswordInputElement extends InfyFormElement
         $html = '<input type="' . $this->type . '" name="' . $this->name . '"';
 
         if ($this->value != "")
+        {
             $html .= ' value="' . $this->value . '"';
+        }
 
         if ($this->id != "")
+        {
             $html .= ' id="' . $this->id . '"';
+        }
 
         $html .= $this->getClassesString();
 

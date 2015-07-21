@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms\Elements;
 
 /**
@@ -7,6 +8,7 @@ namespace Infy\Forms\Elements;
  */
 class HiddenInputElement extends InfyFormElement
 {
+
     /**
      * Instantiates a new HiddenInputElement
      *
@@ -28,10 +30,14 @@ class HiddenInputElement extends InfyFormElement
         $html = '<input type="' . $this->type . '" name="' . $this->name . '"';
 
         if ($this->value != "")
+        {
             $html .= ' value="' . $this->value . '"';
+        }
 
         if ($this->id != "")
+        {
             $html .= ' id="' . $this->id . '"';
+        }
 
         $html .= $this->getClassesString();
 

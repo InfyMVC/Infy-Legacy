@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms;
 
 use Infy\Forms\Elements\InfyFormElementFactory;
@@ -6,6 +7,7 @@ use Infy\Infy;
 
 class InfyFormGenerator
 {
+
     /**
      * Contains the method for the form
      * @var string
@@ -57,7 +59,9 @@ class InfyFormGenerator
     function __construct($method, $action, $addToken = true, $encType = "application/x-www-form-urlencoded")
     {
         if (strtoupper($method) == "POST" && $addToken)
+        {
             $this->formelements[] = InfyFormElementFactory::getNewHiddenInputElement("csrf", Infy::Security()->getCSRF()->generateToken());
+        }
 
         $this->method = $method;
         $this->action = $action;
@@ -118,10 +122,14 @@ class InfyFormGenerator
         $html .= ' enctype="' . $this->encType . '"';
 
         if ($this->name != "")
+        {
             $html .= ' name="' . $this->name . '"';
+        }
 
         if ($this->id != "")
+        {
             $html .= ' id="' . $this->id . '"';
+        }
 
         if (count($this->classes) != 0)
         {

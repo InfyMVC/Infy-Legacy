@@ -1,5 +1,7 @@
 <?php
+
 namespace Infy\Database;
+
 use Infy\Database\Connectors\InfyMySQL;
 use Infy\Infy;
 
@@ -9,11 +11,12 @@ use Infy\Infy;
  */
 class InfyModel
 {
+
     /**
      * Holds the actual number of the used slave
      * @var integer
      */
-    private $_SlaveNo       = 0;
+    private $_SlaveNo = 0;
 
     /**
      * Checks if the database connection is initialized
@@ -25,31 +28,36 @@ class InfyModel
      * Checks if the master connection doesnt working and Infy must use a slave
      * @var boolean
      */
-    private $_UseSlave      = false;
+    private $_UseSlave = false;
 
     /**
      * @var InfyMySQL
      */
-    private $_Connection    = null;
+    private $_Connection = null;
 
     /**
      * @param array $options
      */
     public function init($options = array())
     {
+        if (!Infy::Settings()->getUseDatabase())
+        {
+            return;
+        }
+
         switch ($options['master']['driver'])
         {
             case 'mysqli':
-                $this->_Connection = new InfyMySQL($options['master']['hostname'], $options['master']['port'], $options['master']['user'],
-                    $options['master']['password'], $options['master']['database'], $options['master']['autoquery'],
-                    $options['master']['readonly'], $options['master']['charset']);
+                $this->_Connection = new InfyMySQL($options['master']['hostname'], $options['master']['port'], $options['master']['user'], $options['master']['password'], $options['master']['database'], $options['master']['autoquery'], $options['master']['readonly'], $options['master']['charset']);
                 if ($this->_Connection->connect() == false)
                 {
                     $this->_UseSlave = true;
                     $this->initSlave($options);
                 }
                 else
+                {
                     $this->_IsInitialized = true;
+                }
                 break;
             case 'sqlite':
                 break;
@@ -62,7 +70,9 @@ class InfyModel
     public function initSlave($options)
     {
         if (!$this->_UseSlave)
+        {
             return;
+        }
 
         if (!array_key_exists($this->_SlaveNo, $options['slave']))
         {
@@ -73,17 +83,16 @@ class InfyModel
         switch ($options['master']['driver'])
         {
             case 'mysqli':
-                $this->_Connection = new InfyMySQL($options['slave'][$this->_SlaveNo]['hostname'], $options['slave'][$this->_SlaveNo]['port'],
-                                             $options['slave'][$this->_SlaveNo]['user'], $options['slave'][$this->_SlaveNo]['password'],
-                                             $options['slave'][$this->_SlaveNo]['database'], $options['slave'][$this->_SlaveNo]['autoquery'],
-                                             $options['slave'][$this->_SlaveNo]['readonly'], $options['slave'][$this->_SlaveNo]['charset']);
+                $this->_Connection = new InfyMySQL($options['slave'][$this->_SlaveNo]['hostname'], $options['slave'][$this->_SlaveNo]['port'], $options['slave'][$this->_SlaveNo]['user'], $options['slave'][$this->_SlaveNo]['password'], $options['slave'][$this->_SlaveNo]['database'], $options['slave'][$this->_SlaveNo]['autoquery'], $options['slave'][$this->_SlaveNo]['readonly'], $options['slave'][$this->_SlaveNo]['charset']);
                 if ($this->_Connection->connect() == false)
                 {
                     $this->_SlaveNo += 1;
                     $this->initSlave($options);
                 }
                 else
+                {
                     $this->_IsInitialized = true;
+                }
                 break;
             case 'sqlite':
                 break;

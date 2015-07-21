@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms\Elements;
 
 /**
@@ -7,6 +8,7 @@ namespace Infy\Forms\Elements;
  */
 class TextAreaElement extends InfyFormElement
 {
+
     /**
      * Specifies the visible width of a text area
      * @var int
@@ -114,7 +116,9 @@ class TextAreaElement extends InfyFormElement
         $html .= ' name="' . $this->name . '"';
 
         if ($this->id != "")
+        {
             $html .= ' id="' . $this->id . '"';
+        }
 
         $html .= ' cols="' . $this->cols . '"';
 

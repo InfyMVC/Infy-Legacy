@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms\Elements;
 
 /**
@@ -7,6 +8,7 @@ namespace Infy\Forms\Elements;
  */
 class ImageInputElement extends InfyFormElement
 {
+
     /**
      * Holds the source image
      * @var string
@@ -85,10 +87,14 @@ class ImageInputElement extends InfyFormElement
         $html = '<input type="' . $this->type . '" name="' . $this->name . '"';
 
         if ($this->source != "")
+        {
             $html .= ' src="' . $this->source . '"';
+        }
 
         if ($this->id != "")
+        {
             $html .= ' id="' . $this->id . '"';
+        }
 
         $html .= $this->getClassesString();
 

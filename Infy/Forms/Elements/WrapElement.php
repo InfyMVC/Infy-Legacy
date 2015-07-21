@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Forms\Elements;
 
 /**
@@ -7,6 +8,7 @@ namespace Infy\Forms\Elements;
  */
 class WrapElement extends InfyFormElement
 {
+
     /**
      * Contains the tag of the element
      * @var string
@@ -34,15 +36,19 @@ class WrapElement extends InfyFormElement
     function __toString()
     {
         if ($this->tag == "")
+        {
             return "";
+        }
 
         $html = '<' . $this->tag . '>';
 
         foreach ($this->elements as $key)
+        {
             $html .= $key;
+        }
 
         $html .= '</' . $this->tag . '>';
-        
+
         return $html;
     }
 }

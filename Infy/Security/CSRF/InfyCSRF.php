@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Security\CSRF;
 
 use Exception;
@@ -11,6 +12,7 @@ use Infy\Controller\InfyController;
  */
 class InfyCSRF
 {
+
     /**
      * @var int
      */
@@ -33,7 +35,9 @@ class InfyCSRF
     function __construct($timeout = 300, $checkGETRequests = false)
     {
         if (!session_id())
+        {
             throw new Exception('Cant find sessionid', 1);
+        }
 
         $this->timeout = $timeout;
         $this->checkGETRequests = $checkGETRequests;
@@ -53,7 +57,9 @@ class InfyCSRF
         $charactersLength = strlen($characters) - 1;
 
         for ($i = 0; $i < $length; $i++)
+        {
             $randomString .= $characters[rand(0, $charactersLength)];
+        }
 
         return $randomString;
     }
@@ -105,7 +111,9 @@ class InfyCSRF
     protected function checkTimeout($timeout = null)
     {
         if (!$timeout)
+        {
             $timeout = $this->timeout;
+        }
 
         return ($_SERVER['REQUEST_TIME'] - $_SESSION['csrf']['time']) < $timeout;
     }
@@ -120,7 +128,9 @@ class InfyCSRF
     public function checkToken($timeout = null)
     {
         if (!isset($_SESSION['csrf']) || !$this->checkTimeout($timeout) || !session_id())
+        {
             return false;
+        }
 
         $isGETRequest = isset($_GET['csrf']);
         $isPOSTRequest = isset($_POST['csrf']);
@@ -132,7 +142,9 @@ class InfyCSRF
             $generatedHash = $this->calculateHash();
 
             if ($tokenHash && $generatedHash)
+            {
                 return $tokenHash == $generatedHash;
+            }
         }
 
         return false;

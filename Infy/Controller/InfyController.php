@@ -1,4 +1,5 @@
 <?php
+
 namespace Infy\Controller;
 
 use Infy\Infy;
@@ -10,6 +11,7 @@ use Infy\View\InfyView;
  */
 class InfyController
 {
+
     /**
      * Parameters from the URL
      * @var array
@@ -31,9 +33,13 @@ class InfyController
     public function __construct()
     {
         if (Infy::Settings()->shouldMergeWithPost())
+        {
             $this->_params = array_merge(Infy::Router()->getParams(), $_POST);
+        }
         else
+        {
             $this->_params = Infy::Router()->getParams();
+        }
 
         $this->_extension = Infy::Router()->getExtension();
         $this->_view = Infy::View();
@@ -54,14 +60,20 @@ class InfyController
             {
                 $languages = array_combine($lang_parse[1], $lang_parse[4]);
                 foreach ($languages as $lang => $val)
+                {
                     if ($val === '')
+                    {
                         $languages[$lang] = 1;
+                    }
+                }
                 arsort($languages, SORT_NUMERIC);
             }
         }
 
         foreach ($languages as $lang => $val)
+        {
             break;
+        }
 
         if (stristr($lang, "-"))
         {
@@ -79,13 +91,21 @@ class InfyController
     public static function getClientIP()
     {
         if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown'))
+        {
             return getenv('HTTP_CLIENT_IP');
+        }
         elseif (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown'))
+        {
             return getenv('HTTP_X_FORWARDED_FOR');
+        }
         elseif (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown'))
+        {
             return getenv('REMOTE_ADDR');
+        }
         elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown'))
+        {
             return $_SERVER['REMOTE_ADDR'];
+        }
     }
 
     /**

@@ -132,7 +132,7 @@ class InfyView
     {
         if (!isset($this->_registeredAssets[$type]))
         {
-            $this->_registeredAssets[$type] = arra();
+            $this->_registeredAssets[$type] = array();
         }
 
         $this->_registeredAssets[$type][] = array('file' => $filename, 'isURL' => $isURL);

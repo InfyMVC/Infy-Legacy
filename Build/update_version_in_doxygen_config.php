@@ -23,7 +23,7 @@ else
     echo "Can't open '../Infy/Infy.php'. Please check your file permissions";
 }
 
-$doxygenConfig = file_get_contents("../doxygen.config");
+$doxygenConfig = file_get_contents("doxygen.config");
 
 $doxygenConfig = preg_replace('/PROJECT_NUMBER         =.*/', 'PROJECT_NUMBER         = '.$version, $doxygenConfig);
 

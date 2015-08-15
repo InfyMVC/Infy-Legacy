@@ -27,4 +27,4 @@ $doxygenConfig = file_get_contents("../doxygen.config");
 
 $doxygenConfig = preg_replace('/PROJECT_NUMBER         =.*/', 'PROJECT_NUMBER         = '.$version, $doxygenConfig);
 
-file_put_contents("../doxygen.config", $doxygenConfig);
+file_put_contents("doxygen.config", $doxygenConfig);

@@ -15,7 +15,7 @@ addons:
     - ncftp
 
 script:
-- doxygen doxygen.config > /dev/null
+- doxygen doxygen.config &>/dev/null
 
 after_success:
 - ncftpput -R -v -u "$ftpuser" -p $ftppass $ftpip /docs ./docs/html/

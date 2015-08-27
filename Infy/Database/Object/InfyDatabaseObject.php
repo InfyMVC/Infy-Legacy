@@ -5,12 +5,10 @@ use Infy\Infy;
 /**
  * Project: InfyMVC
  * File: InfyDatabaseObject.php
- * Description: --
  *
  * @author      Till
- * @copyright   2015 - InfyMVC by Till
+ * @copyright   2015 - InfyMVC
  * @created     27.08.2015 - 17:45
- * @license     http://www.php.net/license/3_0.txt  PHP License 3.0
  * @version     1.0
  */
 abstract class InfyDatabaseObject

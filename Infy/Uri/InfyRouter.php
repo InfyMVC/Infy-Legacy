@@ -15,14 +15,8 @@ class InfyRouter
     protected $routes = array();
     protected $namedRoutes = array();
     protected $basePath = '';
-    protected $matchTypes = array(
-        'i' => '[0-9]++',
-        'a' => '[0-9A-Za-z]++',
-        'h' => '[0-9A-Fa-f]++',
-        '*' => '.+?',
-        '**' => '.++',
-        '' => '[^/\.]++'
-    );
+    protected $matchTypes = array('i' => '[0-9]++', 'a' => '[0-9A-Za-z]++', 'h' => '[0-9A-Fa-f]++', '*' => '.+?', '**' => '.++', '' => '[^/\.]++');
+    protected $ErrorRoute = '';
 
     /**
      * All aviable params
@@ -38,9 +32,9 @@ class InfyRouter
     /**
      * Create router in one call from config.
      *
-     * @param array $routes
+     * @param array  $routes
      * @param string $basePath
-     * @param array $matchTypes
+     * @param array  $matchTypes
      */
     public function __construct($routes = array(), $basePath = '', $matchTypes = array())
     {
@@ -54,7 +48,7 @@ class InfyRouter
      */
     public function getParams()
     {
-        return $this->_params;
+        return isset($this->_params) ? $this->_params : array();
     }
 
     /**
@@ -81,6 +75,7 @@ class InfyRouter
      *   );
      *
      * @param array $routes
+     *
      * @return void
      * @author Koen Punt
      */
@@ -120,9 +115,9 @@ class InfyRouter
      * Map a route to a target
      *
      * @param string $method One of 5 HTTP Methods, or a pipe-separated list of multiple HTTP Methods (GET|POST|PATCH|PUT|DELETE)
-     * @param string $route The route regex, custom regex must start with an @. You can use multiple pre-set regex filters, like [i:id]
-     * @param mixed $target The target where this route should point to. Can be anything.
-     * @param string $name Optional name of this route. Supply if you want to reverse route this url in your application.
+     * @param string $route  The route regex, custom regex must start with an @. You can use multiple pre-set regex filters, like [i:id]
+     * @param array  $target The target where this route should point to. Can be anything.
+     * @param string $name   Optional name of this route. Supply if you want to reverse route this url in your application.
      */
     public function map($method, $route, $target, $name = null)
     {
@@ -149,7 +144,8 @@ class InfyRouter
      * Generate the URL for a named route. Replace regexes with supplied parameters
      *
      * @param string $routeName The name of the route.
-     * @param array @params Associative array of parameters to replace placeholders with.
+     * @param        array      @params Associative array of parameters to replace placeholders with.
+     *
      * @return string The URL of the route with named parameters in place.
      */
     public function generate($routeName, array $params = array())
@@ -158,7 +154,8 @@ class InfyRouter
         if (!isset($this->namedRoutes[$routeName]))
         {
             Infy::Log()->error("Route '" . $routeName . "' does not exist.");
-            return;
+
+            return $this->ErrorRoute;
         }
 
         // Replace named parameters
@@ -192,8 +189,10 @@ class InfyRouter
 
     /**
      * Match a given Request Url against stored routes
+     *
      * @param string $requestUrl
      * @param string $requestMethod
+     *
      * @return array|boolean Array with route information on success, false on failure (no match).
      */
     public function match($requestUrl = null, $requestMethod = null)
@@ -230,7 +229,12 @@ class InfyRouter
         {
             list($method, $_route, $target, $name) = $handler;
 
-            $methods = explode('|', $method);
+            if (strtolower($method) === strtolower($requestMethod) && (strtolower($_route) === strtolower($requestUrl) || strtolower($_route) . "/" === strtolower($requestUrl)))
+            {
+                return array('target' => ["controller" => $target["controller"], 'action' => $target["action"]]);
+            }
+
+            $methods      = explode('|', $method);
             $method_match = false;
 
             // Check if request method matches. If not, abandon early. (CHEAP)
@@ -257,15 +261,15 @@ class InfyRouter
             elseif (isset($_route[0]) && $_route[0] === '@')
             {
                 $pattern = '`' . substr($_route, 1) . '`u';
-                $match = preg_match($pattern, $requestUrl, $params);
+                $match   = preg_match($pattern, $requestUrl, $params);
             }
             else
             {
                 $route = null;
                 $regex = false;
-                $j = 0;
-                $n = isset($_route[0]) ? $_route[0] : null;
-                $i = 0;
+                $j     = 0;
+                $n     = isset($_route[0]) ? $_route[0] : null;
+                $i     = 0;
 
                 // Find the longest non-regex substring and match it against the URI
                 while (true)
@@ -276,16 +280,18 @@ class InfyRouter
                     }
                     elseif (false === $regex)
                     {
-                        $c = $n;
+                        $c     = $n;
                         $regex = $c === '[' || $c === '(' || $c === '.';
                         if (false === $regex && false !== isset($_route[$i + 1]))
                         {
-                            $n = $_route[$i + 1];
+                            $n     = $_route[$i + 1];
                             $regex = $n === '?' || $n === '+' || $n === '*' || $n === '{';
                         }
 
                         if (false === $regex && $c !== '/' && (!isset($requestUrl[$j]) || $c !== $requestUrl[$j]))
+                        {
                             continue 2;
+                        }
 
                         $j++;
                     }
@@ -301,8 +307,12 @@ class InfyRouter
                 if ($params)
                 {
                     foreach ($params as $key => $value)
+                    {
                         if (is_numeric($key))
+                        {
                             unset($params[$key]);
+                        }
+                    }
                     $this->_params = $params;
                 }
 
@@ -311,18 +321,18 @@ class InfyRouter
                     unset($params["format"]);
                 }
 
-                return array(
-                    'target' => $target,
-                    'name' => $name
-                );
+                return array('target' => $target, 'name' => $name);
             }
         }
+
         return false;
     }
 
     /**
      * Compile the regex for a given route (EXPENSIVE)
+     *
      * @param $route
+     *
      * @return string
      */
     private function compileRoute($route)
@@ -345,17 +355,12 @@ class InfyRouter
                 }
 
                 //Older versions of PCRE require the 'P' in (?P<named>)
-                $pattern = '(?:'
-                        . ($pre !== '' ? $pre : null)
-                        . '('
-                        . ($param !== '' ? "?P<$param>" : null)
-                        . $type
-                        . '))'
-                        . ($optional !== '' ? '?' : null);
+                $pattern = '(?:' . ($pre !== '' ? $pre : null) . '(' . ($param !== '' ? "?P<$param>" : null) . $type . '))' . ($optional !== '' ? '?' : null);
 
                 $route = str_replace($block, $pattern, $route);
             }
         }
+
         return "`^$route$`u";
     }
 
@@ -366,10 +371,28 @@ class InfyRouter
             if ($value[1] == $route)
             {
                 $controllername = "App\\Controller\\" . $value[2]['controller'];
-                $controller = new $controllername();
+                $controller     = new $controllername();
                 $controller->{$value[2]["action"]}();
                 break;
             }
         }
     }
+
+    /**
+     * @return string
+     */
+    public function getErrorRoute()
+    {
+        return $this->ErrorRoute;
+    }
+
+    /**
+     * @param string $ErrorRoute
+     */
+    public function setErrorRoute($ErrorRoute)
+    {
+        $this->ErrorRoute = $ErrorRoute;
+    }
+
+
 }

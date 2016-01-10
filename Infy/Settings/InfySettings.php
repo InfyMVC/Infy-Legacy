@@ -76,7 +76,7 @@ class InfySettings
 
         if (isset($settings['route']['404redirectRoute']))
         {
-            Infy::set404RedirectRoute($settings['route']['404redirectRoute']);
+            Infy::Router()->setErrorRoute($settings['route']['404redirectRoute']);
         }
     }
 
@@ -106,7 +106,7 @@ class InfySettings
     }
 
     /**
-     * @return bool Should Infy append by default the default namespace to the controllers in routes.php
+     * @return bool Should Infy append by default the default namespace to the controllers
      */
     public function getAppendDefaultNamespaceToControllers()
     {

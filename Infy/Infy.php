@@ -2,6 +2,7 @@
 
 namespace Infy;
 
+use Infy\Annotations\AnnotationReader;
 use Infy\Database\InfyModel;
 use Infy\Helper\PHPMailer;
 use Infy\Log\InfyLog;
@@ -10,6 +11,9 @@ use Infy\Session\InfySession;
 use Infy\Settings\InfySettings;
 use Infy\Uri\InfyRouter;
 use Infy\View;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RegexIterator;
 
 /**
  * Class Infy
@@ -77,12 +81,6 @@ class Infy
      * @var PHPMailer
      */
     private static $_mailer;
-
-    /**
-     * Holds an string for the route when a 404 happens
-     * @var string
-     */
-    private static $_404RedirectRoute;
 
     /**
      * Current version
@@ -243,14 +241,6 @@ class Infy
     }
 
     /**
-     * @param string $route
-     */
-    public static function set404RedirectRoute($route)
-    {
-        self::$_404RedirectRoute = $route;
-    }
-
-    /**
      * @param string $classname
      */
     public static function __autoload($classname)
@@ -287,6 +277,60 @@ class Infy
         }
     }
 
+    public static function loadAllRoutes()
+    {
+        $path  = __DIR__ . "/../App/Controller/";
+        $fqcns = array();
+
+        $allFiles = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+        $phpFiles = new RegexIterator($allFiles, '/\.php$/');
+        foreach ($phpFiles as $phpFile)
+        {
+            $content   = file_get_contents($phpFile->getRealPath());
+            $tokens    = token_get_all($content);
+            $namespace = '';
+            for ($index = 0; isset($tokens[$index]); $index++)
+            {
+                if (!isset($tokens[$index][0]))
+                {
+                    continue;
+                }
+                if (T_NAMESPACE === $tokens[$index][0])
+                {
+                    $index += 2; // Skip namespace keyword and whitespace
+                    while (isset($tokens[$index]) && is_array($tokens[$index]))
+                    {
+                        $namespace .= $tokens[$index++][1];
+                    }
+                }
+                if (T_CLASS === $tokens[$index][0])
+                {
+                    $index += 2; // Skip class keyword and whitespace
+                    $fqcns[] = $namespace . '\\' . $tokens[$index][1];
+                }
+            }
+        }
+
+        foreach ($fqcns as $key => $value)
+        {
+            $controller       = new $value();
+            $reflectedClass   = new \ReflectionClass($controller);
+            $reflectedMethods = $reflectedClass->getMethods();
+
+            foreach ($reflectedMethods as $keyO => $reflectedMethod)
+            {
+                if ($reflectedMethod->class === "Infy\\Controller\\InfyController")
+                {
+                    continue;
+                }
+
+                $annotationReader = new AnnotationReader($reflectedMethod);
+
+                Infy::Router()->map($annotationReader->getValue("Method"), $annotationReader->getValue("Route"), ['controller' => $reflectedMethod->class, 'action' => $reflectedMethod->getName()], $annotationReader->getValue("Name"));
+            }
+        }
+    }
+
     /**
      * Run the mysterious code!
      */
@@ -297,16 +341,15 @@ class Infy
 
         Infy::Router()->setBasePath(str_replace(array("\n", "\r"), "", $matches["basepath"]));
 
-
         self::$_sessionHandlerClass = self::Settings()->getSessionHandler();
 
         self::Session()->startSession();
 
         $result = Infy::Router()->match();
 
-        if ($result == false)
+        if ($result === false)
         {
-            header("Location: " . Infy::Router()->generate(self::$_404RedirectRoute));
+            header("Location: " . Infy::Router()->generate(self::Router()->getErrorRoute()));
 
             return;
         }
@@ -320,14 +363,15 @@ class Infy
             {
                 try
                 {
-                    $controllerName = (Infy::Settings()->getAppendDefaultNamespaceToControllers() ? "App\\Controller\\" . $result["target"]["controller"] : $result["target"]["controller"] );
-                    $methodName = $result["target"]["action"];
+                    $controllerName = (Infy::Settings()->getAppendDefaultNamespaceToControllers() ? "App\\Controller\\" . $result["target"]["controller"] : $result["target"]["controller"]);
+                    $methodName     = $result["target"]["action"];
 
                     $reflectedController = new \ReflectionClass($controllerName);
 
                     if (!$reflectedController->hasMethod($methodName))
                     {
                         Infy::Log()->error("Class '" . $controllerName . "' doesn't have the method '" . $methodName . "'");
+
                         return;
                     }
 
@@ -336,6 +380,7 @@ class Infy
                     if ($reflectedMethod->isPrivate() || $reflectedMethod->isProtected())
                     {
                         Infy::Log()->error("Method '" . $methodName . "' in class '" . $controllerName . "' is private or protected. Please change the visibility to public.");
+
                         return;
                     }
 
@@ -351,6 +396,7 @@ class Infy
                 }
                 catch (\ReflectionException $exception)
                 {
+                    Infy::Log()->error($exception->getMessage());
                     Infy::Log()->error("Infy had some problems while reflecting a class. Please report back to the developer team. Class " . $controllerName);
                 }
             }
